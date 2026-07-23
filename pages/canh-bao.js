@@ -67,7 +67,7 @@ export default function CanhBao() {
       <div className="topbar">
         <div className="topbar-inner">
           <div>
-            <div className="eyebrow">VietinBank · Chi nhánh Bắc Nghệ An</div>
+            <div className="eyebrow">VietinBank · Chi nhánh Ngũ Hành Sơn</div>
             <div className="title">Cảnh báo cán bộ điểm thi đua thấp</div>
             <div className="subtitle">
               Danh sách RM có điểm thi đua thấp hơn 30% điểm bình quân/RM toàn chi nhánh trong kỳ — xem xét trừ 2 điểm KPI + không xét thi đua năm 2026.
@@ -229,7 +229,7 @@ export default function CanhBao() {
         )}
       </div>
 
-      <footer>VietinBank Chi nhánh Bắc Nghệ An · Dữ liệu phục vụ chương trình thi đua CRM1.0 Transformation 2026</footer>
+      <footer>VietinBank Chi nhánh Ngũ Hành Sơn · Dữ liệu phục vụ chương trình thi đua CRM1.0 Transformation 2026</footer>
     </>
   );
 }
