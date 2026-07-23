@@ -107,7 +107,7 @@ export default function Home() {
       <div className="topbar">
         <div className="topbar-inner">
           <div>
-            <div className="eyebrow">VietinBank · Chi nhánh Bắc Nghệ An</div>
+            <div className="eyebrow">VietinBank · Chi nhánh Ngũ Hành Sơn</div>
             <div className="title">CRM1.0 Transformation 2026 — Đổi hành vi, tăng hiệu quả</div>
             <div className="subtitle">
               Bảng điểm thi đua triển khai CRM 1.0 — cập nhật theo từng kỳ tháng, tính theo
@@ -211,7 +211,7 @@ export default function Home() {
         )}
       </div>
 
-      <footer>VietinBank Chi nhánh Bắc Nghệ An · Dữ liệu phục vụ chương trình thi đua CRM1.0 Transformation 2026</footer>
+      <footer>VietinBank Chi nhánh Ngũ Hành Sơn · Dữ liệu phục vụ chương trình thi đua CRM1.0 Transformation 2026</footer>
     </>
   );
 }
