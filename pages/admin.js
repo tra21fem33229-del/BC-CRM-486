@@ -282,7 +282,7 @@ export default function Admin() {
       <div className="topbar">
         <div className="topbar-inner">
           <div>
-            <div className="eyebrow">VietinBank · Chi nhánh Bắc Nghệ An</div>
+            <div className="eyebrow">VietinBank · Chi nhánh Ngũ Hành Sơn</div>
             <div className="title">Quản trị dữ liệu thi đua CRM1.0</div>
             <div className="subtitle">Tải số liệu Excel hằng tháng, hệ thống tự tính điểm theo Công văn 7087.</div>
           </div>
@@ -459,7 +459,7 @@ export default function Admin() {
         )}
       </div>
 
-      <footer>Nội bộ VietinBank Chi nhánh Bắc Nghệ An · Dữ liệu phục vụ chương trình thi đua CRM1.0 Transformation 2026</footer>
+      <footer>Nội bộ VietinBank Chi nhánh Ngũ Hành Sơn · Dữ liệu phục vụ chương trình thi đua CRM1.0 Transformation 2026</footer>
     </>
   );
 }
