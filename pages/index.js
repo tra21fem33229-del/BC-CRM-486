@@ -176,7 +176,7 @@ export default function Home() {
               </div>
               <div className="stat-card">
                 <div className="num">{(s.leadTuongTac || 0).toLocaleString('vi-VN')}</div>
-                <div className="lbl">Lead có tương tác</div>
+                <div className="lbl">Lead/OPP có tương tác</div>
               </div>
               <div className="stat-card accent">
                 <div className="num">{tyLeChung}%</div>
