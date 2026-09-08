@@ -1,4 +1,4 @@
-# CRM1.0 Transformation 2026 — Bảng thi đua Chi nhánh Bắc Nghệ An
+# CRM1.0 Transformation 2026 — Bảng thi đua Chi nhánh Ngũ Hành Sơn
 
 Website nội bộ công khai bảng điểm thi đua CRM1.0 theo Công văn 7087/TGĐ-NHCT-KHDN5,
 kèm trang quản trị để Trưởng phòng Kế hoạch Tổng hợp tải số liệu Excel hằng tháng.
