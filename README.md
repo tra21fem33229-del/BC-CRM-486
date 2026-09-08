@@ -10,71 +10,130 @@ kèm trang quản trị để Trưởng phòng Kế hoạch Tổng hợp tải s
 - **xlsx (SheetJS)** — đọc file Excel ngay trên trình duyệt, không upload file thô lên server
 - Đăng nhập admin bằng mật khẩu (biến môi trường) + cookie phiên ký HMAC, không dùng thư viện ngoài
 
-## Chạy thử ở máy local
-
-```bash
-npm install
-cp .env.local.example .env.local
-# Sửa .env.local: đặt ADMIN_PASSWORD và SESSION_SECRET
-npm run dev
-```
-
-Mở http://localhost:3000. Lưu ý: khi chạy local mà **chưa** cấu hình `DATABASE_URL`, các API
-đọc/ghi dữ liệu sẽ báo lỗi kết nối Postgres — đây là điều bình thường, vì cần có database Neon
-thật. Cách nhanh nhất để có dữ liệu test: tạo database Neon trước (xem bên dưới), chạy
-`db/schema.sql` trong Neon SQL Editor, copy connection string vào `.env.local`, rồi chạy lại
-`npm run dev`.
-
 ## Triển khai lên GitHub + Vercel
 
-### 1) Đẩy code lên GitHub
+Dưới đây là hướng dẫn triển khai dự án **`crm_444`** được định dạng lại đẹp mắt bằng Markdown, tối ưu cho việc đọc và theo dõi từng bước.
 
-```bash
-cd crm-thi-dua
-git init
-git add .
-git commit -m "Khoi tao website thi dua CRM1.0"
-git branch -M main
-git remote add origin https://github.com/<ten-tai-khoan>/<ten-repo>.git
-git push -u origin main
+---
+
+# 🚀 Hướng Dẫn Triển Khai Dự Án CRM 444 (Next.js + Neon + Vercel)
+
+Tài liệu này hướng dẫn từng bước đưa dự án **`crm_444`** từ thư mục mã nguồn lên hoạt động thực tế trên Internet.
+
+---
+
+## 🛠️ Quy Trình Thực Hiện
+Tải mã nguồn về máy tính (<> Code/Download Zip - Giải nén)
+```
+┌───────────────┐     ┌───────────────┐     ┌───────────────┐
+│   Bước 1      │ ──> │   Bước 2      │ ──> │   Bước 3      │
+│ Khởi tạo Neon │     │ Push GitHub   │     │ Deploy Vercel │
+└───────────────┘     └───────────────┘     └───────────────┘
+
 ```
 
-### 2) Tạo project trên Vercel
+---
 
-1. Đăng nhập [vercel.com](https://vercel.com) bằng tài khoản GitHub.
-2. **Add New → Project**, chọn repo vừa đẩy lên.
-3. Vercel tự nhận diện Next.js, để nguyên cấu hình mặc định, bấm **Deploy** lần đầu
-   (sẽ báo lỗi thiếu biến môi trường/DATABASE_URL — không sao, xử lý ở bước 3–4 rồi deploy lại).
+## 🔹 Bước 1: Khởi Tạo Cơ Sở Dữ Liệu Trên Neon (PostgreSQL)
 
-### 3) Gắn Neon Postgres Database
+Dự án này sử dụng cơ sở dữ liệu PostgreSQL với cấu trúc được định nghĩa sẵn trong file `db/schema.sql`.
 
-1. Trong project trên Vercel → tab **Storage** → **Browse Storage** (hoặc **Create Database**).
-2. Trong mục **Marketplace Database Providers**, chọn **Neon** (dòng "Serverless Postgres").
-3. Nếu đã có tài khoản Neon, Vercel sẽ cho đăng nhập/liên kết tài khoản đó; nếu chưa, hệ thống
-   tự tạo giúp.
-4. Chọn **project Neon có sẵn** (nếu đã có) hoặc tạo project/database mới, chọn khu vực gần Việt
-   Nam nhất (Singapore — `ap-southeast-1`), bấm **Create/Connect**.
-5. Ở bước **Connect Project**, chọn đúng project Vercel (`crm_444` hoặc tên repo anh đã đặt) —
-   Vercel tự thêm biến môi trường `DATABASE_URL` vào project, không cần tự nhập.
-6. **Tạo bảng dữ liệu (chỉ làm một lần):** vào Neon Dashboard → chọn database vừa tạo →
-   **SQL Editor**, dán toàn bộ nội dung file `db/schema.sql` trong project này vào, bấm **Run**.
-   Việc này tạo bảng `thidua_data` để lưu điểm — nếu bỏ qua bước này, website sẽ báo lỗi "Không
-   đọc được dữ liệu" khi mở trang.
+1. **Tạo Project mới trên Neon:**
+* Truy cập [neon.tech](https://neon.tech/) và đăng nhập.
+* Nhấn **Create Project**.
+* **Project Name:** `crm-444-db` (hoặc tên tùy chọn).
+* **Region:** Chọn `Singapore` (để tối ưu tốc độ tại Việt Nam).
 
-### 4) Thêm biến môi trường còn lại
 
-Vào **Settings → Environment Variables**, thêm cho cả 3 môi trường (Production/Preview/Development):
+2. **Khởi tạo các bảng dữ liệu (Tables):**
+* Trong giao diện điều khiển của Neon, chọn mục **SQL Editor** ở menu bên trái.
+* Mở file `schema.sql` nằm trong thư mục `crm_444-main/db/` trên máy tính, **sao chép toàn bộ nội dung SQL**.
 
-| Tên biến | Giá trị |
-|---|---|
-| `ADMIN_PASSWORD` | Mật khẩu quản trị bạn tự chọn, càng khó đoán càng tốt |
-| `SESSION_SECRET` | Một chuỗi ngẫu nhiên dài (vd. chạy `openssl rand -hex 32`) |
 
-### 5) Deploy lại
+* Dán vào khung **SQL Editor** trên Neon và nhấn **Run** để khởi tạo cấu trúc cơ sở dữ liệu.
 
-Vào tab **Deployments**, bấm **Redeploy** cho lần deploy mới nhất (hoặc chỉ cần `git push` một
-commit mới, Vercel tự build lại). Từ giờ mỗi lần `git push` lên nhánh `main`, Vercel tự động
-build và deploy phiên bản mới, có sẵn URL dạng `https://<ten-project>.vercel.app`.
+
+3. **Lấy chuỗi kết nối (Database Connection String):**
+* Quay lại trang **Dashboard** của Neon.
+* Tại mục **Connection Details**, chọn tab **Pooled connection**.
+* Sao chép đoạn mã kết nối có dạng:
+```env
+postgresql://username:password@ep-xxxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+
+```
+
+
+* 📌 *Lưu lại chuỗi này ra Notepad để dùng ở Bước 3.*
+
+
+
+---
+
+## 🔹 Bước 2: Tải Mã Nguồn Lên GitHub
+
+1. **Chuẩn bị file code:**
+* Giải nén file mã nguồn đã tải về mà có chứa thư mục `crm_444-main` trên máy tính.
+
+
+
+
+2. **Tạo Repository mới trên GitHub:**
+* Đăng nhập vào [github.com](https://github.com/).
+* Nhấn dấu **`+`** (góc trên bên phải) $\rightarrow$ Chọn **New repository**.
+* **Repository name:** `crm_444`
+* **Option:** Chọn *Public* hoặc *Private* tùy nhu cầu.
+* Nhấn **Create repository** *(không tích chọn khởi tạo README hay .gitignore vì code đã có sẵn)*.
+
+
+
+
+3. **Đẩy code lên tài khoản Githup:**
+* Trong trang githup, phần Quick Setup chọn *uploading an existing file**
+* Kéo thả tất cả file và folder trên máy tính vào phần cửa sổ trang githup*
+
+---
+
+## 🔹 Bước 3: Triển Khai Ứng Dụng Lên Vercel
+
+Dự án được xây dựng bằng **Next.js**, Vercel sẽ tự động tối ưu quá trình Build và Hosting.
+
+1. **Import dự án từ GitHub:**
+* Truy cập [vercel.com](https://vercel.com/) và đăng nhập bằng tài khoản **GitHub**.
+* Nhấn **Add New...** $\rightarrow$ Chọn **Project**.
+* Tìm repository `crm_444` vừa đẩy lên và nhấn **Import**.
+
+
+2. **Thêm biến môi trường (Environment Variables) ⚠️ *Cực kỳ quan trọng*:**
+* Trước khi bấm Deploy, mở rộng mục **Environment Variables**.
+* Dựa theo mẫu từ file `.env.local.example`, thêm các biến cấu hình sau:
+
+
+
+
+
+| Key (Tên biến) | Value (Giá trị) | Ghi chú |
+| --- | --- | --- |
+| `DATABASE_URL` | `postgresql://...` | Chuỗi kết nối lấy từ **Neon** ở Bước 1 |
+| `SESSION_SECRET` | `chuoi_bao_mat_tu_chon_123` | Chuỗi ký tự ngẫu nhiên dùng mã hóa session |
+| `ADMIN_PASSWORD` | `mat_khau_trang_admin` | Mật khẩu dùng để đăng nhập trang Quản trị |
+
+3. **Thực thi Deploy:**
+* Nhấn nút **Deploy**.
+* Chờ khoảng 1–2 phút để Vercel tự động cài đặt các phụ thuộc từ `package.json` và biên dịch dự án.
+
+
+* Khi hoàn tất, Vercel sẽ cấp cho bạn đường link truy cập dạng:
+`[https://crm-444-xxx.vercel.app](https://crm-444-xxx.vercel.app)`
+
+
+
+---
+
+## 📝 Kiểm Tra Sau Khi Hoàn Tất
+
+* [x] Truy cập đường link trang web do Vercel cung cấp.
+* [x] Thử đăng nhập vào trang Quản trị (`/admin` hoặc theo đường dẫn ứng dụng) bằng `ADMIN_PASSWORD` đã thiết lập.
+* [x] Thực hiện thêm/sửa/xóa dữ liệu để đảm bảo ứng dụng kết nối mượt mà tới **Neon PostgreSQL Database**.
 
 ## Sử dụng
 
@@ -99,18 +158,59 @@ build và deploy phiên bản mới, có sẵn URL dạng `https://<ten-project>
   số liệu" để xem trước, "Lưu vào bảng xếp hạng" để công bố. Có thể xóa hẳn một kỳ nếu cần làm
   lại từ đầu.
 
-## Di chuyển (migrate) dữ liệu khi hệ thống đổi cách tính điểm
 
-Mỗi khi logic tính điểm cốt lõi thay đổi (ví dụ: đổi cách đối chiếu phòng, đổi phạm vi RM được
-tính...), các kỳ đã tải **trước đó** vẫn đang lưu dữ liệu theo cách tính cũ, không tương thích
-với kết quả mới. Hệ thống tự phát hiện việc này qua `schemaVersion` gắn trên mỗi file đã xử lý
-(xem `PARTIAL_SCHEMA_VERSION` trong `lib/aggregate.js`) và sẽ **không** cho dùng lại file ở phiên
-bản cũ — ô tương ứng hiện "Dữ liệu cũ — cần tải lại" (màu cam) thay vì "Đã có" (màu xanh).
+## Lọc "Ngày tương tác" đúng theo kỳ tháng
 
-**Cách xử lý:** với mỗi kỳ đã tải trước đó, vào Quản trị, chọn lại đúng tháng đó, rồi tải lại
-**đủ cả 5 file gốc** của kỳ đó (không thể chỉ tải 1 file rồi dùng lại 4 file cũ, vì 4 file cũ
-không dùng được nữa). Sau khi lưu, kỳ đó sẽ ở phiên bản mới và từ lần sau có thể sửa từng file
-riêng lẻ bình thường. Các kỳ tạo mới từ bây giờ trở đi không bị ảnh hưởng.
+2 file "Tiếp cận tương tác LEAD/OPP" do CRM xuất ra theo **trạng thái hiện tại**, không phải theo
+đúng khoảng ngày ghi ở tiêu đề file — nghĩa là file "kỳ tháng 8" vẫn có thể chứa những Lead/Opp có
+"Ngày tương tác" thuộc tháng 7, tháng 6 hoặc cũ hơn (do Lead/Opp đó vẫn đang mở, chưa đóng trạng
+thái). Nếu tính thẳng theo file sẽ đếm nhầm các tương tác cũ vào kỳ đang xử lý.
+
+Hệ thống giờ tự lọc: khi admin xử lý số liệu cho một tháng áp dụng cụ thể (ô "Tháng áp dụng" ở
+trang Quản trị), chỉ những dòng có cột **"Ngày tương tác"** rơi đúng vào tháng đó mới được tính
+vào "Lead/Opp có tương tác" (và số liệu CĐS đi kèm). Việc lọc diễn ra **theo từng dòng**, sau đó
+mới gộp lại theo mã Lead/Opp — nên một Lead/Opp có nhiều lần tương tác ở nhiều tháng khác nhau vẫn
+được tính đúng vào (các) kỳ có tương tác thật, không bị tính trùng hay tính nhầm kỳ.
+
+Sau khi bấm "Xử lý số liệu", nếu có dòng bị loại vì ngoài kỳ, hệ thống sẽ hiện cảnh báo dạng
+`"37/578 dòng có Ngày tương tác ngoài kỳ 2026-08 — ... sẽ KHÔNG được tính..."` — đây là điều **bình
+thường**, không phải lỗi file. Nếu file không có cột "Ngày tương tác" (định dạng file cũ/khác), hệ
+thống sẽ cảnh báo và **tạm tính toàn bộ dòng** (không lọc) để tránh vô tình đưa số liệu về 0 cho
+tất cả mọi người.
+
+> Vì đây là thay đổi CÁCH TÍNH (không chỉ thêm số liệu con), `PARTIAL_SCHEMA_VERSION` tăng lên
+> **5**. Các kỳ đã lưu trước đó cần tải lại 2 file "Tiếp cận tương tác LEAD/OPP" (tối thiểu) để áp
+> dụng cách lọc mới.
+
+## Nút "Sáng kiến CĐS" — chỉ tính Lead/Opp thuộc nhóm nguồn sáng kiến CĐS
+
+Trên trang Bảng xếp hạng (`/`), có nút bật/tắt **"Sáng kiến CĐS"** cạnh ô tìm kiếm. Khi bật, toàn
+bộ thẻ thống kê, bảng xếp hạng Phòng/PGD, bảng xếp hạng cán bộ RM và file Excel xuất ra chỉ tính
+trên các dòng Lead/Opp có cột **"Nhóm nguồn"** thuộc:
+
+```
+Kênh sáng kiến CĐS KHBL
+Kênh sáng kiến CĐS KHDN
+```
+
+Điểm thi đua khi bật nút (`diemCDS`) dùng **đúng công thức Mục 6.1/6.2 công văn 7087** (RM: số
+tuyệt đối; Phòng: chia bình quân theo số RM biên chế — số RM không đổi theo bộ lọc nguồn), chỉ
+khác ở chỗ tử số (Lead giao, Lead/Opp có tương tác, Lead→Opp, Opp thành công) chỉ đếm các dòng
+thuộc 2 nhóm nguồn trên. Bảng xếp hạng khi bật nút sẽ tự sắp xếp lại theo `diemCDS` (không dùng
+thứ tự `diem` đầy đủ đã lưu sẵn).
+
+Số liệu con này (hậu tố `CDS`, ví dụ `leadGiaoCDS`, `leadTuongTacCDS`, `diemCDS`...) được tính
+song song với số liệu đầy đủ ngay từ bước đọc file Excel (`lib/aggregate.js`), lưu chung trong
+cùng các cột JSONB `phong`/`rm`/`summary` — **không cần đổi cấu trúc bảng CSDL**, không cần tải
+lại 5 file mỗi lần bật/tắt nút.
+
+> **Vì cấu trúc "partial" đã thay đổi** (thêm số liệu con CDS), `PARTIAL_SCHEMA_VERSION` đã tăng
+> lên **4**. Các kỳ đã tải từ trước khi có tính năng này sẽ được coi là "dữ liệu cũ" và **cần tải
+> lại đủ 5 file** ở trang Quản trị cho từng kỳ đó để có số liệu CĐS (trang quản trị sẽ tự báo
+> "Dữ liệu cũ — cần tải lại" ở các ô file tương ứng).
+
+Trang Quản trị (`/admin`) cũng có nút "Xem theo Sáng kiến CĐS" ngay trong khung xem trước (Top 5
+Phòng/Top 5 Cán bộ) để kiểm tra số liệu trước khi bấm "Lưu vào bảng xếp hạng".
 
 ## Tab Cảnh báo — cán bộ có điểm thấp hơn 30% bình quân chi nhánh
 
@@ -132,42 +232,6 @@ Ngưỡng cảnh báo = 30% × Điểm bình quân/RM
 Trang hiển thị: điểm bình quân, ngưỡng cảnh báo, số/tỷ lệ RM bị cảnh báo, số RM cảnh báo theo
 từng phòng, và bảng chi tiết từng RM (sắp xếp điểm thấp nhất lên đầu) kèm mức độ nghiêm trọng
 (badge màu theo % so với bình quân: ≤10% đỏ, ≤20% cam, còn lại vàng).
-
-## Đối chiếu Phòng bằng MÃ PHÒNG (không dùng tên phòng)
-
-4 file CRM và file danh sách biên chế được đối chiếu theo **mã phòng**, không theo tên phòng —
-tránh sai lệch do viết hoa/thường, thừa/thiếu dấu cách, hay cách viết tắt khác nhau giữa các
-nguồn dữ liệu. Tên phòng chỉ dùng để hiển thị trên giao diện.
-
-Hai định dạng mã phòng được tự động quy đổi về cùng một chuẩn:
-- **4 file CRM** dùng mã 5 ký tự dạng `444xx` (cột "Mã phòng").
-- **File biên chế PeopleSoft** thường dùng mã 9 ký tự dạng `0444xx000` (cột có tên chứa "Mã
-  phòng", ví dụ "Mã phòng ban") — hệ thống tự cắt số 0 đầu và 3 số 0 cuối để quy về `444xx`.
-
-Cột nhận diện RM trong file biên chế cũng được mở rộng, chấp nhận thêm `Email/AD`, `Email`, `AD`,
-`Mã đăng nhập` bên cạnh các tên cột đã hỗ trợ trước đó.
-
-**Chỉ tính trên RM có trong file biên chế — nhất quán ở CẢ 3 CẤP:** vì mục tiêu chương trình
-thi đua là tính trên RM biên chế, hệ thống lọc bỏ hoàn toàn hoạt động của các RM không có tên
-trong file biên chế **trước khi** cộng dồn — áp dụng cho cả điểm RM, điểm Phòng, và số liệu Chi
-nhánh (kể cả mốc điểm bình quân ở tab Cảnh báo). Không phải chỉ ẩn RM lạ khỏi bảng xếp hạng cá
-nhân mà vẫn cộng ngầm vào điểm Phòng — đóng góp của RM ngoài biên chế bị loại khỏi mọi con số.
-
-## Tiêu chí công văn dùng SỐ LƯỢNG, không dùng tỷ lệ %
-
-Cả công thức tính điểm và giao diện hiển thị đều dùng **số lượng tuyệt đối** Lead/Opp có tương
-tác — đúng nguyên văn Mục 6.1 và 6.2 Công văn 7087 ("Số lượng Lead/Opp có thông tin tương tác,
-tiếp cận"). Không có chỉ số tỷ lệ % nào được dùng trong công thức hay hiển thị trên bảng xếp
-hạng, để tránh gây hiểu nhầm đây là một tiêu chí xét thưởng.
-
-
-
-Mỗi file trong 5 file được xử lý **ngay trên trình duyệt** của admin thành một "partial" — số
-liệu đã tổng hợp theo Phòng/RM (số lượng Lead, Opp, tỷ lệ...) — **trước khi** gửi lên server.
-Partial này **không chứa** tên khách hàng, CIF, hay mã số thuế. Server chỉ lưu các partial đã ẩn
-danh này, nên khi cần lấy lại dữ liệu của 4 file không đổi để gộp cùng 1 file mới, hệ thống lấy
-lại đúng các partial đó — dữ liệu khách hàng gốc chưa từng và sẽ không bao giờ được lưu trên
-server.
 
 ## Công thức tính điểm (đúng theo Công văn 7087)
 
